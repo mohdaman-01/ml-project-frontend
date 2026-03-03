@@ -1,5 +1,5 @@
 /* ================================================================
-   Fake Job Detector — Frontend Logic (Netlify Deploy)
+   JobGuardAI — Frontend Logic v2 (Netlify Deploy)
    ================================================================ */
 
 // ┌─────────────────────────────────────────────────────────────────┐
@@ -21,8 +21,9 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
 });
 
 // ── Helpers ────────────────────────────────────────────
-function show(id) { document.getElementById(id).classList.remove('hidden'); }
-function hide(id) { document.getElementById(id).classList.add('hidden'); }
+const $ = id => document.getElementById(id);
+const show = id => $(id).classList.remove('hidden');
+const hide = id => $(id).classList.add('hidden');
 
 function setLoading(on) {
     if (on) {
@@ -37,14 +38,14 @@ function setLoading(on) {
 }
 
 function showError(msg, suggestion) {
-    document.getElementById('error-msg').textContent = msg;
-    document.getElementById('error-suggestion').textContent = suggestion || '';
+    $('error-msg').textContent = msg;
+    $('error-suggestion').textContent = suggestion || '';
     show('error-box');
 }
 
 // ── Analyze URL ────────────────────────────────────────
 async function analyzeURL() {
-    const url = document.getElementById('url-input').value.trim();
+    const url = $('url-input').value.trim();
     if (!url) return showError('Please paste a LinkedIn URL first.');
 
     setLoading(true);
@@ -62,15 +63,15 @@ async function analyzeURL() {
         }
         renderResults(data);
     } catch (err) {
-        showError('Cannot reach the API. Is the Hugging Face Space running?', err.message);
+        showError('Cannot reach the API. The Hugging Face Space may be sleeping — try again in 30 seconds.', err.message);
     }
     setLoading(false);
 }
 
 // ── Analyze Text ───────────────────────────────────────
 async function analyzeText() {
-    const title = document.getElementById('field-title').value.trim();
-    const description = document.getElementById('field-description').value.trim();
+    const title = $('field-title').value.trim();
+    const description = $('field-description').value.trim();
 
     if (!title && !description) {
         return showError('Please fill in at least the job title or description.');
@@ -79,13 +80,13 @@ async function analyzeText() {
     const payload = {
         mode: 'text',
         title,
-        company_profile: document.getElementById('field-company').value.trim(),
+        company_profile: $('field-company').value.trim(),
         description,
-        requirements: document.getElementById('field-requirements').value.trim(),
-        benefits: document.getElementById('field-benefits').value.trim(),
-        telecommuting: document.getElementById('toggle-telecommuting').checked ? 1 : 0,
-        has_company_logo: document.getElementById('toggle-logo').checked ? 1 : 0,
-        has_questions: document.getElementById('toggle-questions').checked ? 1 : 0,
+        requirements: $('field-requirements').value.trim(),
+        benefits: $('field-benefits').value.trim(),
+        telecommuting: $('toggle-telecommuting').checked ? 1 : 0,
+        has_company_logo: $('toggle-logo').checked ? 1 : 0,
+        has_questions: $('toggle-questions').checked ? 1 : 0,
     };
 
     setLoading(true);
@@ -103,7 +104,7 @@ async function analyzeText() {
         }
         renderResults(data);
     } catch (err) {
-        showError('Cannot reach the API. Is the Hugging Face Space running?', err.message);
+        showError('Cannot reach the API. The Hugging Face Space may be sleeping — try again in 30 seconds.', err.message);
     }
     setLoading(false);
 }
@@ -113,11 +114,12 @@ function renderResults(data) {
     hide('error-box');
 
     // Verdict
-    const vc = document.getElementById('verdict-card');
+    const vc = $('verdict-card');
     vc.classList.remove('legit', 'fraud');
-    vc.classList.add(data.verdict === 'Legit' ? 'legit' : 'fraud');
-    document.getElementById('verdict-text').textContent = data.verdict === 'Legit' ? 'LEGIT' : 'FRAUDULENT';
-    document.getElementById('confidence-text').textContent =
+    const isLegit = data.verdict === 'Legit';
+    vc.classList.add(isLegit ? 'legit' : 'fraud');
+    $('verdict-text').textContent = isLegit ? 'LEGIT' : 'FRAUDULENT';
+    $('confidence-text').textContent =
         `Model confidence: ${(data.confidence * 100).toFixed(1)}%`;
 
     // Gauge
@@ -125,26 +127,36 @@ function renderResults(data) {
 
     // Job details
     const jd = data.job_details || {};
-    document.getElementById('detail-title').textContent = jd.title || 'N/A';
-    document.getElementById('detail-company').textContent = jd.company || 'N/A';
-    document.getElementById('detail-description').textContent = jd.description || 'N/A';
+    $('detail-title').textContent = jd.title || 'N/A';
+    $('detail-company').textContent = jd.company || 'N/A';
+    $('detail-description').textContent = jd.description || 'N/A';
 
     // Flags
-    renderFlags('red-flags-list', data.red_flags || [], 'red');
-    renderFlags('green-flags-list', data.green_flags || [], 'green');
+    const redFlags = data.red_flags || [];
+    const greenFlags = data.green_flags || [];
+
+    $('red-count').textContent = redFlags.length;
+    $('green-count').textContent = greenFlags.length;
+
+    renderFlags('red-flags-list', redFlags, 'red');
+    renderFlags('green-flags-list', greenFlags, 'green');
 
     show('results');
-    document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // Smooth scroll to results
+    setTimeout(() => {
+        $('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
 }
 
 function renderFlags(containerId, flags, type) {
-    const el = document.getElementById(containerId);
+    const el = $(containerId);
     if (flags.length === 0) {
         el.innerHTML = `<div class="no-flags">No ${type === 'red' ? 'red' : 'green'} flags detected</div>`;
         return;
     }
     el.innerHTML = flags.map((f, i) => `
-        <div class="flag-card ${type}" style="animation-delay: ${i * 0.08}s">
+        <div class="flag-card ${type}" style="animation-delay: ${i * 0.07}s">
             <div class="flag-name">${escapeHtml(f.flag)}</div>
             <div class="flag-detail">${escapeHtml(f.detail)}</div>
         </div>
@@ -159,34 +171,42 @@ function escapeHtml(str) {
 
 // ── Gauge animation ────────────────────────────────────
 function animateGauge(score) {
-    const fill = document.getElementById('gauge-fill');
-    const valueEl = document.getElementById('gauge-value');
+    const fill = $('gauge-fill');
+    const valueEl = $('gauge-value');
     const totalLen = 251.2;
 
+    // Dynamic color: green → amber → red
     let color;
-    if (score < 30) color = '#00cec9';
-    else if (score < 60) color = '#fdcb6e';
-    else color = '#ff6b6b';
+    if (score < 25) color = '#34d399';
+    else if (score < 50) color = '#fbbf24';
+    else if (score < 75) color = '#f97316';
+    else color = '#f87171';
 
     fill.style.stroke = color;
     valueEl.style.color = color;
 
+    // Animate arc
     const targetOffset = totalLen - (score / 100) * totalLen;
     fill.style.strokeDashoffset = targetOffset;
 
-    let current = 0;
-    const step = Math.max(1, Math.ceil(score / 60));
-    const timer = setInterval(() => {
-        current += step;
-        if (current >= score) {
-            current = score;
-            clearInterval(timer);
-        }
-        valueEl.textContent = Math.round(current);
-    }, 20);
+    // Animate number with easing
+    const duration = 1200;
+    const start = performance.now();
+
+    function update(now) {
+        const elapsed = Math.min(now - start, duration);
+        const progress = elapsed / duration;
+        // ease-out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(eased * score);
+        valueEl.textContent = current;
+        if (elapsed < duration) requestAnimationFrame(update);
+        else valueEl.textContent = Math.round(score);
+    }
+    requestAnimationFrame(update);
 }
 
 // ── Enter key triggers analyze ─────────────────────────
-document.getElementById('url-input').addEventListener('keydown', (e) => {
+$('url-input').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') analyzeURL();
 });
