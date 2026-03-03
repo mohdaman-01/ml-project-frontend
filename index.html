@@ -4,207 +4,300 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JobGuardAI — Fake Job Post Detector</title>
+    <title>JobGuardAI — Protect Yourself From Fake Jobs</title>
     <meta name="description"
-        content="Detect fraudulent job postings instantly with AI-powered analysis. Get risk scores, red-flag highlights, and protect yourself from job scams.">
+        content="AI-powered fake job post detection. Paste any job posting and get instant fraud analysis with risk scoring and red-flag detection.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <!-- Animated background blobs -->
-    <div class="bg-blobs">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-    </div>
+    <!-- Background effects -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="bg-glow bg-glow-3"></div>
 
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="logo">
-                <div class="logo-icon">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <div class="nav-brand">
+                <div class="brand-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
                         stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                        <polyline points="9 12 11 14 15 10" stroke-width="2" />
+                        <polyline points="9 12 11 14 15 10" />
                     </svg>
                 </div>
-                <h1>JobGuard<span class="logo-ai">AI</span></h1>
+                <span class="brand-text">JobGuard<span class="brand-ai">AI</span></span>
             </div>
-            <p class="tagline">Detect fake job postings with AI-powered analysis</p>
-        </header>
+            <div class="nav-badge">
+                <span class="badge-dot"></span>
+                Model Active
+            </div>
+        </div>
+    </nav>
 
-        <!-- Input Section -->
-        <section class="input-section glass-card">
-            <!-- Mode Toggle -->
-            <div class="mode-toggle">
-                <button class="mode-btn active" data-mode="url" id="mode-url-btn">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                        stroke-linecap="round" stroke-linejoin="round">
+    <main class="main">
+
+        <!-- HERO SECTION -->
+        <section class="hero">
+            <div class="hero-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                </svg>
+                AI-Powered Scam Detection
+            </div>
+            <h1 class="hero-title">
+                Don't fall for <span class="text-gradient">fake jobs.</span>
+            </h1>
+            <p class="hero-subtitle">Paste a job posting below and our AI model — trained on 17,880+ real and fake
+                listings — will analyze it for fraud signals in seconds.</p>
+        </section>
+
+        <!-- SCANNER SECTION -->
+        <section class="scanner" id="scanner">
+            <!-- Tabs -->
+            <div class="tab-bar">
+                <button class="tab active" data-tab="url" id="tab-url">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
                         <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
                         <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
                     </svg>
-                    Paste URL
+                    LinkedIn URL
                 </button>
-                <button class="mode-btn" data-mode="text" id="mode-text-btn">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                        stroke-linecap="round" stroke-linejoin="round">
+                <button class="tab" data-tab="text" id="tab-text">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                         <polyline points="14 2 14 8 20 8" />
                         <line x1="16" y1="13" x2="8" y2="13" />
                         <line x1="16" y1="17" x2="8" y2="17" />
                     </svg>
-                    Paste Text
+                    Manual Entry
                 </button>
             </div>
 
-            <!-- URL Mode -->
-            <div id="url-mode" class="input-mode active">
-                <div class="url-input-row">
-                    <input type="url" id="url-input" placeholder="https://www.linkedin.com/jobs/view/..."
-                        autocomplete="off" spellcheck="false">
-                    <button class="analyze-btn" id="analyze-url-btn" onclick="analyzeURL()">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <!-- URL Panel -->
+            <div class="panel active" id="panel-url">
+                <div class="url-bar">
+                    <div class="url-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
                             <circle cx="11" cy="11" r="8" />
                             <line x1="21" y1="21" x2="16.65" y2="16.65" />
                         </svg>
-                        Scan
+                    </div>
+                    <input type="url" id="url-input" placeholder="Paste LinkedIn job URL here..." autocomplete="off"
+                        spellcheck="false">
+                    <button class="scan-btn" id="scan-url-btn" onclick="analyzeURL()">
+                        Scan Now
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg>
                     </button>
                 </div>
-                <p class="input-hint">Paste a LinkedIn job posting URL to scan for fraud signals</p>
+                <div class="url-formats">
+                    Supports: linkedin.com/jobs/view/... &bull; linkedin.com/jobs/search/?currentJobId=...
+                </div>
             </div>
 
-            <!-- Text Mode -->
-            <div id="text-mode" class="input-mode">
-                <div class="text-fields">
-                    <div class="field-group">
-                        <label for="field-title">Job Title *</label>
-                        <input type="text" id="field-title" placeholder="e.g. Software Engineer at Google">
+            <!-- Text Panel -->
+            <div class="panel" id="panel-text">
+                <div class="form-grid">
+                    <div class="form-field span-full">
+                        <label>Job Title <span class="req">*</span></label>
+                        <input type="text" id="field-title" placeholder="e.g. Senior Software Engineer at Acme Corp">
                     </div>
-                    <div class="field-group">
-                        <label for="field-company">Company Profile</label>
-                        <textarea id="field-company" rows="2"
-                            placeholder="Describe the company (leave blank if not available)"></textarea>
-                    </div>
-                    <div class="field-group">
-                        <label for="field-description">Job Description *</label>
+                    <div class="form-field span-full">
+                        <label>Job Description <span class="req">*</span></label>
                         <textarea id="field-description" rows="5"
-                            placeholder="Paste the full job description here..."></textarea>
+                            placeholder="Paste the complete job description here..."></textarea>
                     </div>
-                    <div class="field-row">
-                        <div class="field-group">
-                            <label for="field-requirements">Requirements</label>
-                            <textarea id="field-requirements" rows="3"
-                                placeholder="Required qualifications..."></textarea>
+                    <div class="form-field">
+                        <label>Company Profile</label>
+                        <textarea id="field-company" rows="2" placeholder="About the company..."></textarea>
+                    </div>
+                    <div class="form-field">
+                        <label>Requirements</label>
+                        <textarea id="field-requirements" rows="2" placeholder="Qualifications needed..."></textarea>
+                    </div>
+                    <div class="form-field span-full">
+                        <label>Benefits</label>
+                        <textarea id="field-benefits" rows="2" placeholder="Benefits and perks offered..."></textarea>
+                    </div>
+                    <div class="form-field span-full">
+                        <div class="chip-row">
+                            <label class="chip" id="chip-remote">
+                                <input type="checkbox" id="toggle-telecommuting">
+                                <span class="chip-body">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                        <polyline points="9 22 9 12 15 12 15 22" />
+                                    </svg>
+                                    Remote
+                                </span>
+                            </label>
+                            <label class="chip" id="chip-logo">
+                                <input type="checkbox" id="toggle-logo">
+                                <span class="chip-body">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                        <circle cx="8.5" cy="8.5" r="1.5" />
+                                        <polyline points="21 15 16 10 5 21" />
+                                    </svg>
+                                    Has Logo
+                                </span>
+                            </label>
+                            <label class="chip" id="chip-questions">
+                                <input type="checkbox" id="toggle-questions">
+                                <span class="chip-body">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                                    </svg>
+                                    Has Questions
+                                </span>
+                            </label>
                         </div>
-                        <div class="field-group">
-                            <label for="field-benefits">Benefits</label>
-                            <textarea id="field-benefits" rows="3" placeholder="Benefits offered..."></textarea>
-                        </div>
                     </div>
-                    <div class="toggles-row">
-                        <label class="toggle-label">
-                            <input type="checkbox" id="toggle-telecommuting">
-                            <span class="toggle-switch"></span>
-                            Remote / Telecommuting
-                        </label>
-                        <label class="toggle-label">
-                            <input type="checkbox" id="toggle-logo">
-                            <span class="toggle-switch"></span>
-                            Has Company Logo
-                        </label>
-                        <label class="toggle-label">
-                            <input type="checkbox" id="toggle-questions">
-                            <span class="toggle-switch"></span>
-                            Has Screening Questions
-                        </label>
-                    </div>
-                    <button class="analyze-btn full-width" id="analyze-text-btn" onclick="analyzeText()">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="8" />
-                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                        </svg>
-                        Analyze Job Post
-                    </button>
                 </div>
+                <button class="scan-btn scan-btn-full" id="scan-text-btn" onclick="analyzeText()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    Analyze Job Posting
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                        <polyline points="12 5 19 12 12 19" />
+                    </svg>
+                </button>
             </div>
         </section>
 
-        <!-- Loading -->
-        <div id="loading" class="loading hidden">
-            <div class="spinner"></div>
-            <p>Scanning for fraud signals</p>
-        </div>
-
-        <!-- Error -->
-        <div id="error-box" class="error-box hidden glass-card">
-            <div class="error-icon">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="15" y1="9" x2="9" y2="15" />
-                    <line x1="9" y1="9" x2="15" y2="15" />
+        <!-- LOADING -->
+        <section id="loading" class="scan-loading hidden">
+            <div class="scan-ring">
+                <div class="ring-outer"></div>
+                <div class="ring-inner"></div>
+                <svg class="ring-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
                 </svg>
             </div>
+            <p class="scan-text">Scanning for fraud patterns</p>
+            <div class="scan-bar">
+                <div class="scan-bar-fill"></div>
+            </div>
+        </section>
+
+        <!-- ERROR -->
+        <div id="error-box" class="error-card hidden">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="15" y1="9" x2="9" y2="15" />
+                <line x1="9" y1="9" x2="15" y2="15" />
+            </svg>
             <div>
-                <p class="error-msg" id="error-msg"></p>
-                <p class="error-suggestion" id="error-suggestion"></p>
+                <p id="error-msg"></p>
+                <p class="error-sub" id="error-suggestion"></p>
             </div>
         </div>
 
-        <!-- Results -->
-        <section id="results" class="results hidden">
-            <!-- Verdict + Risk Gauge row -->
-            <div class="results-top">
-                <div class="verdict-card glass-card" id="verdict-card">
-                    <p class="verdict-label">Verdict</p>
-                    <h2 class="verdict-text" id="verdict-text">&mdash;</h2>
-                    <p class="confidence-text" id="confidence-text"></p>
-                </div>
-                <div class="gauge-card glass-card">
-                    <p class="gauge-label">Risk Score</p>
-                    <div class="gauge-container">
-                        <svg class="gauge-svg" viewBox="0 0 200 120">
-                            <path class="gauge-bg" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke-width="14"
+        <!-- RESULTS -->
+        <section id="results" class="report hidden">
+
+            <!-- Report Header -->
+            <div class="report-header">
+                <h2 class="report-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                    </svg>
+                    Scan Report
+                </h2>
+                <div class="verdict-badge" id="verdict-badge">—</div>
+            </div>
+
+            <!-- Score Row -->
+            <div class="score-row">
+                <!-- Circular gauge -->
+                <div class="score-card">
+                    <div class="circle-gauge" id="circle-gauge">
+                        <svg viewBox="0 0 120 120">
+                            <circle class="cg-track" cx="60" cy="60" r="52" fill="none" stroke-width="8" />
+                            <circle class="cg-fill" id="cg-fill" cx="60" cy="60" r="52" fill="none" stroke-width="8"
                                 stroke-linecap="round" />
-                            <path class="gauge-fill" id="gauge-fill" d="M 20 100 A 80 80 0 0 1 180 100" fill="none"
-                                stroke-width="14" stroke-linecap="round" />
                         </svg>
-                        <div class="gauge-value" id="gauge-value">0</div>
+                        <div class="cg-center">
+                            <span class="cg-number" id="cg-number">0</span>
+                            <span class="cg-label">Risk</span>
+                        </div>
                     </div>
-                    <p class="gauge-range">0 = Safe &nbsp;&middot;&nbsp; 100 = Scam</p>
+                    <p class="score-sub">out of 100</p>
+                </div>
+
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card" id="stat-confidence">
+                        <span class="stat-value" id="stat-conf-val">—</span>
+                        <span class="stat-label">Confidence</span>
+                    </div>
+                    <div class="stat-card" id="stat-red">
+                        <span class="stat-value stat-red-val" id="stat-red-val">0</span>
+                        <span class="stat-label">Red Flags</span>
+                    </div>
+                    <div class="stat-card" id="stat-green">
+                        <span class="stat-value stat-green-val" id="stat-green-val">0</span>
+                        <span class="stat-label">Green Flags</span>
+                    </div>
+                    <div class="stat-card" id="stat-verdict-card">
+                        <span class="stat-value" id="stat-verdict-val">—</span>
+                        <span class="stat-label">Verdict</span>
+                    </div>
                 </div>
             </div>
 
             <!-- Job Details -->
-            <div class="job-details glass-card" id="job-details-card">
-                <h3>Extracted Job Details</h3>
-                <div class="detail-grid">
+            <div class="detail-card">
+                <h3 class="section-label">Job Details</h3>
+                <div class="detail-row">
                     <div class="detail-item">
-                        <span class="detail-label">Title</span>
-                        <span class="detail-value" id="detail-title">&mdash;</span>
+                        <span class="detail-key">Title</span>
+                        <span class="detail-val" id="detail-title">—</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Company</span>
-                        <span class="detail-value" id="detail-company">&mdash;</span>
+                        <span class="detail-key">Company</span>
+                        <span class="detail-val" id="detail-company">—</span>
                     </div>
-                    <div class="detail-item detail-full">
-                        <span class="detail-label">Description</span>
-                        <span class="detail-value" id="detail-description">&mdash;</span>
-                    </div>
+                </div>
+                <div class="detail-item detail-full-width">
+                    <span class="detail-key">Description</span>
+                    <span class="detail-val" id="detail-description">—</span>
                 </div>
             </div>
 
             <!-- Flags -->
-            <div class="flags-grid">
-                <div class="flags-column" id="red-flags-col">
-                    <h3 class="flags-title red">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <div class="flags-section">
+                <div class="flags-col">
+                    <h3 class="section-label section-label-red">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2.2">
                             <path
                                 d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
@@ -212,33 +305,37 @@
                             <line x1="12" y1="17" x2="12.01" y2="17" />
                         </svg>
                         Red Flags
-                        <span class="flags-count" id="red-count">0</span>
+                        <span class="flag-badge red-bg" id="red-count-badge">0</span>
                     </h3>
                     <div id="red-flags-list" class="flags-list"></div>
                 </div>
-                <div class="flags-column" id="green-flags-col">
-                    <h3 class="flags-title green">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                <div class="flags-col">
+                    <h3 class="section-label section-label-green">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2.2">
                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                             <polyline points="22 4 12 14.01 9 11.01" />
                         </svg>
                         Green Flags
-                        <span class="flags-count" id="green-count">0</span>
+                        <span class="flag-badge green-bg" id="green-count-badge">0</span>
                     </h3>
                     <div id="green-flags-list" class="flags-list"></div>
                 </div>
             </div>
-        </section>
 
-        <footer class="footer">
-            <p>AI-powered fraud detection for job seekers</p>
-            <div class="footer-badge">
-                <span class="dot"></span>
-                Model trained on 17,880+ job postings
-            </div>
-        </footer>
-    </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <span class="footer-brand">JobGuard<span class="brand-ai">AI</span></span>
+            <span class="footer-sep">&bull;</span>
+            <span>Trained on 17,880+ job postings</span>
+            <span class="footer-sep">&bull;</span>
+            <span>Random Forest + TF-IDF</span>
+        </div>
+    </footer>
 
     <script src="app.js"></script>
 </body>
